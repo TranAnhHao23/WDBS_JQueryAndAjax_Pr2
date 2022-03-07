@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -119,7 +118,7 @@ public class AppConfiguration extends WebMvcConfigurerAdapter implements Applica
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/jqueryandajax_practise01?useSSL=false");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/jqueryandajax_practise02?useSSL=false");
         dataSource.setUsername("root");
         dataSource.setPassword("12345678");
         return dataSource;
