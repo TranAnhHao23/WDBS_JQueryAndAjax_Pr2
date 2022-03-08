@@ -2,6 +2,7 @@ package cg.controller;
 
 import cg.model.Category;
 import cg.service.ICategoryService;
+import cg.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 public class CategoryController {
     @Autowired
     private ICategoryService categoryService;
+
+    @Autowired
+    private IProductService productService;
 
     @GetMapping
     public ResponseEntity<Iterable<Category>> showAllCategory() {
@@ -38,13 +42,15 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Category> deleteCategory(@PathVariable("id") Long id) {
+    @DeleteMapping("/{idCategory}")
+    public ResponseEntity<Category> deleteCategory(@PathVariable("idCategory") Long id) {
         Category category = categoryService.findById(id);
         if (category == null) {
             new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            productService.deleteAllByCategory(category);
+            categoryService.deleteById(id);
         }
-        categoryService.deleteById(id);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 }

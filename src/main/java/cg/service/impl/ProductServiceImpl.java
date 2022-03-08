@@ -59,4 +59,9 @@ public class ProductServiceImpl implements IProductService {
     public Iterable<Product> findAllByNameContainingAndPriceBetween(String name, double firstPrice, double secondPrice) {
         return productRepository.findAllByNameContainingAndPriceBetween(name,firstPrice,secondPrice);
     }
+
+    @Override
+    public Iterable<Product> deleteAllByCategory(Category category) {
+        return productRepository.deleteAllByCategory(category);
+    }
 }

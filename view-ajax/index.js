@@ -39,7 +39,7 @@ function editProduct(id) {
     $.ajax({
         type: "GET",
         url: `http://localhost:8080/products/${id}`,
-        success: function (product){
+        success: function (product) {
             $('#name').val(product.name)
             $('#price').val(product.price)
             $('#category').val(product.category.idCategory)
@@ -53,7 +53,7 @@ function editProduct(id) {
     })
 }
 
-function updateProduct(id){
+function updateProduct(id) {
     let name = $('#name').val()
     let price = $('#price').val()
     let categoryId = $('#category').val()
@@ -63,7 +63,7 @@ function updateProduct(id){
         price: price,
         description: description,
         category: {
-            idCategory : categoryId,
+            idCategory: categoryId,
         },
     };
 
@@ -100,7 +100,7 @@ function createNewProduct() {
         price: price,
         description: description,
         category: {
-            idCategory : categoryId,
+            idCategory: categoryId,
         },
     };
 
@@ -119,7 +119,7 @@ function createNewProduct() {
     event.preventDefault();
 }
 
-function getAllCategorySelect(){
+function getAllCategorySelect() {
     $.ajax({
         type: "GET",
         url: `http://localhost:8080/categories`,
@@ -132,6 +132,7 @@ function getAllCategorySelect(){
             }
             content += '</optgroup>'
             document.getElementById('categoryList').innerHTML = content; // tại sao ở đây chỉ nhận dấu ngoặc đơn nhỉ ???
+            document.getElementById("formCreateCategory").hidden = true;
         }
     })
 }
@@ -156,7 +157,7 @@ function getDetailCategory(category) {
     return `<option value="${category.idCategory}">${category.nameCategory}</option>`;
 }
 
-function searchProduct(){
+function searchProduct() {
     let search = document.getElementById("search").value;
     let firstPrice = document.getElementById("firstPrice").value;
     let secondPrice = document.getElementById("secondPrice").value;
@@ -165,7 +166,7 @@ function searchProduct(){
     $.ajax({
         type: "GET",
         url: `http://localhost:8080/products/searchFull?search=${search}&firstPrice=${firstPrice}&secondPrice=${secondPrice}&idCategory=${idCategory}`,
-        success: function (products){
+        success: function (products) {
             let content = '<tr>\n' +
                 '<th> Product Name</th>\n' +
                 '<th>Price</th>\n' +
@@ -182,6 +183,81 @@ function searchProduct(){
     event.preventDefault();
 }
 
+function listCategory() {
+    document.getElementById("product-button-div").hidden = false;
+    document.getElementById("category-button-div").hidden = true;
+    document.getElementById("listCategory").hidden = false;
+    document.getElementById("listProduct").hidden = true;
+}
+
+function getListCategory() {
+    $.ajax({
+        type: "GET",
+        url: `http://localhost:8080/categories`,
+
+        success: function (categories) {
+            let content = '<tr>\n' +
+                '<th> Category Name</th>\n' +
+                '<th>Action</th></tr>'
+            for (let i = 0; i < categories.length; i++) {
+                content += getDetailCategory1(categories[i]);
+            }
+            document.getElementById("tableCategory").innerHTML = content; // tại sao ở đây chỉ nhận dấu ngoặc đơn nhỉ ???
+        }
+    })
+}
+
+function getDetailCategory1(category) {
+    return `<tr><td>${category.nameCategory}</td>\n` +
+        `<td><button class="btn btn-danger" onclick="deleteCategory(${category.idCategory})">Delete</button></td></tr>`;
+}
+
+function deleteCategory(idCategory) {
+    $.ajax({
+        type: "DELETE",
+        url: `http://localhost:8080/categories/${idCategory}`,
+        success: function () {
+            getAllCategorySelect();
+        }
+    })
+}
+
+function listProduct() {
+    document.getElementById("product-button-div").hidden = true;
+    document.getElementById("category-button-div").hidden = false;
+    document.getElementById("listCategory").hidden = true;
+    document.getElementById("listProduct").hidden = false;
+}
+
+function createCategory() {
+    document.getElementById("formCreateCategory").reset();
+    document.getElementById("formCreateCategory").hidden = false;
+    document.getElementById("form-button-category").onclick = function () {
+        createNewCategory();
+    }
+}
+
+function createNewCategory() {
+    let name = $('#nameCategory').val()
+    let newCategory = {
+        nameCategory: name,
+    }
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "POST",
+        data: JSON.stringify(newCategory),
+        url: `http://localhost:8080/categories`,
+        success: function () {
+            getAllCategorySelect();
+        }
+    })
+    event.preventDefault();
+}
+
 getAll();
 getAllCategory();
 getAllCategorySelect();
+getListCategory();

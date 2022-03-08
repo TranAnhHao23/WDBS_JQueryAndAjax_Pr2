@@ -17,4 +17,6 @@ public interface IProductRepository extends CrudRepository<Product,Long> {
 
     Iterable<Product> findAllByNameContainingAndPriceBetween(String name, double firstPrice, double secondPrice);
 
+    Iterable<Product> deleteAllByCategory(Category category);
+
 }
