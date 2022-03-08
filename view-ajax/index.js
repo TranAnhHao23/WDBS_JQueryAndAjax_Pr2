@@ -13,7 +13,7 @@ function getAll() {
             for (let i = 0; i < products.length; i++) {
                 content += detailProduct(products[i]);
             }
-            document.getElementById('tableProduct').innerHTML = content; // tại sao ở đây chỉ nhận dấu ngoặc đơn nhỉ ???
+            document.getElementById("tableProduct").innerHTML = content; // tại sao ở đây chỉ nhận dấu ngoặc đơn nhỉ ???
             document.getElementById("formCreate").hidden = true;
         }
     })
@@ -119,6 +119,23 @@ function createNewProduct() {
     event.preventDefault();
 }
 
+function getAllCategorySelect(){
+    $.ajax({
+        type: "GET",
+        url: `http://localhost:8080/categories`,
+
+        success: function (categories) {
+            let content = '<optgroup label="Select Category">\n' +
+                '<option value="0">All Category</option>'
+            for (let i = 0; i < categories.length; i++) {
+                content += getDetailCategory(categories[i]);
+            }
+            content += '</optgroup>'
+            document.getElementById('categoryList').innerHTML = content; // tại sao ở đây chỉ nhận dấu ngoặc đơn nhỉ ???
+        }
+    })
+}
+
 function getAllCategory() {
     $.ajax({
         type: "GET",
@@ -141,9 +158,13 @@ function getDetailCategory(category) {
 
 function searchProduct(){
     let search = document.getElementById("search").value;
+    let firstPrice = document.getElementById("firstPrice").value;
+    let secondPrice = document.getElementById("secondPrice").value;
+    let idCategory = document.getElementById("categoryList").value;
+
     $.ajax({
         type: "GET",
-        url: `http://localhost:8080/products/search?search=${search}`,
+        url: `http://localhost:8080/products/searchFull?search=${search}&firstPrice=${firstPrice}&secondPrice=${secondPrice}&idCategory=${idCategory}`,
         success: function (products){
             let content = '<tr>\n' +
                 '<th> Product Name</th>\n' +
@@ -163,3 +184,4 @@ function searchProduct(){
 
 getAll();
 getAllCategory();
+getAllCategorySelect();
